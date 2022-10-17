@@ -1,0 +1,147 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ text_ticket_dashboard }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_latest_comment }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <td class="text-left">{{ column_case_title }}</td>
+                        <td class="text-center" style="width: 70%;">{{ text_comment_body }}</td>
+                        <td class="text-right">{{ column_action }}</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if commentByCases %}
+                      {% for commentByCase in commentByCases %}
+                      <tr>
+                        <td class="text-left">{{ commentByCase.case_title }}</td>
+                        <td class="text-center">{{ commentByCase.comment_body }}</td>
+                        <td class="text-right"><a href="{{ commentByCase.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-primary"><i class="fa fa-eye"></i></a></td>
+                      </tr>
+                      {% endfor %}
+                      {% else %}
+                      <tr>
+                        <td class="text-center" colspan="3">{{ text_no_results }}</td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_latest_tickets }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <td class="text-left">{{ column_case_title }}</td>
+                          <td class="text-left">{{ column_status }}</td>
+                          <td class="text-center">{{ column_assignee }}</td>
+                          <td class="text-right">{{ column_date_added }}</td>
+                          <td class="text-right">{{ column_action }}</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if cases %}
+                        {% for case in cases %}
+                        <tr>
+                          <td class="text-left">{{ case.case_title }}</td>
+                          <td class="text-left">{{ case.status }}</td>
+                          <td class="text-center"><a href="{{ case.agent_url }}">{{ case.agent_name }}</a></td>
+                          <td class="text-right">{{ case.date_added }}</td>
+                          <td class="text-right"><a href="{{ case.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-primary"><i class="fa fa-eye"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td class="text-center" colspan="5">{{ text_no_results }}</td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 text-left"><b> <a href="{{ all_tickets }}">View All Tickets...</a> </b></div>
+                    <div class="col-sm-6 text-right"><b> Total Tickets = {{ case_total }}</b></div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_agent_list }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <td class="text-left">{{ column_agent }}</td>
+                          <td class="text-center">{{ column_open_ticket }}</td>
+                          <td class="text-center">{{ column_close_ticket }}</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if agentsTickets %}
+                        {% for agentsTicket in agentsTickets %}
+                        <tr>
+                          <td class="text-left"><a href="{{ agentsTicket.agent_url }}">{{ agentsTicket.agent_name }}</a></td>
+                          <td class="text-center">{{ agentsTicket.open_ticket }}</td>
+                          <td class="text-center">{{ agentsTicket.close_ticket }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td class="text-center" colspan="3">{{ text_no_results }}</td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 text-left"><b> <a href="{{ all_agents }}">View All Agents...</a> </b></div>
+                    <div class="col-sm-6 text-right"><b> Total Agents = {{ agent_total }}</b></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+  <script type="text/javascript"><!--
+  $('.date').datetimepicker({
+    language: '{{ datepicker }}',
+    pickTime: true
+  });
+  //--></script></div>
+</div>
+{{ footer }}

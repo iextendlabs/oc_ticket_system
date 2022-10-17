@@ -1,0 +1,159 @@
+<style>
+    hr {border: 1px solid rgb(0, 0, 0);}
+    .comment1 {
+        padding: 10px;
+        border-left: 6px solid #095484;
+        background-color: #d0e2bc;
+        color: #095484;
+    }
+    .comment2 {
+        padding: 10px;
+        border-left: 6px solid #095484;
+        background-color: #ffffff;
+        color: #095484;
+    }
+</style>
+{{ header }} {{ column_left }}
+    
+<div id="content">
+    <div class="page-header">
+        
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a type="button" href="{{order_data}}" class="btn btn-warning">{{text_order_data}}</a>
+                <a type="button" href="{{all_tickets}}" class="btn btn-primary">{{text_view_all}}</a>
+              </div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+            {% for breadcrumb in breadcrumbs %}
+            <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_view }}</h3>
+      </div>
+      <div class="container-fluid row">
+      <div class="panel-body col-sm-6">
+          <form action="{{ actionForAssigning }}" method="post" enctype="multipart/form-data" id="form-assign" class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-agent">Assign Ticket (select agent)</label>
+              <div class="col-sm-6">
+                <select name="agent_id" id="input-agent" class="form-control">
+                  {% for agent in agents %}
+                    <option value="{{ agent.agent_id }}">{{ agent.agent_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <input type="hidden" value="{{ case_id }}" name="case_id">
+          </form>
+          <div class="pull-right">
+          <button type="submit" form="form-assign" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+          </div>
+      </div>
+      <div class="panel-body col-sm-6">
+        <br><br><h4><b>Ticket Status:</b> {% if case_status == 1 %} Open {% else %} Close {% endif %}</h4><br>
+          <h4><b>Agent Name:</b> {{ agent_name }}</h4>
+      </div>
+      </div>
+      <hr>
+      <div class="panel-body">
+        {% if image  %}
+          <div class="pull-right">
+            <a type="button" target="_blank" href="{{image}}" class="btn btn-primary btn-lg ">{{ text_attachment }}</a>
+          </div>
+        {% endif %}
+        <h2><b>Case Title:</b> {{ case_heading }}</h2>
+        <h4><b>Description:</b>  {{ description }}</h4><hr>
+        
+        {% for comment in comments %}
+            {% if comment.user_id >0  %}
+            <div class="row">
+                <div class="col-sm-6 " style="padding: 10px;">
+                    <textarea class="comment1" rows="5" cols="60" disabled>{{comment.comment_body}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 ">
+                {% if comment.image  %}
+                  <a type="button" target="_blank" href="{{ comment.image }}" class="btn btn-primary ">{{ text_attachment }}</a>
+                {% endif %}
+                <p class="text-right"><a href="{{ comment.delete_href }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa fa-trash-o"></i></a></p>
+                  <p class="text-right">{{comment.date_added}}</p>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if comment.customer_id >0  %}
+            <div class="row">
+                <div class="col-sm-6  pull-right" style="padding: 10px;" >
+                    <textarea class="comment2" rows="5" cols="60" disabled>{{comment.comment_body}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 pull-right">
+                {% if comment.image  %}
+                  <a type="button" target="_blank" href="{{ comment.image }}" class="btn btn-primary ">{{ text_attachment }}</a>
+                {% endif %}
+                <p class="text-right"><a href="{{ comment.delete_href }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa fa-trash-o"></i></a></p>
+                  <p class="text-right">{{comment.date_added}}</p>
+              </div>
+            </div>
+            {% endif %}
+            
+        {% endfor %}
+            {% if case_status >0 %}
+          <div class="row">
+            <div class="col-sm-6">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-comment" class="form-horizontal">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label" for="input-comment">{{ entry_comment }}</label>
+                      <div class="col-sm-10">
+                        <textarea name="comment_body" placeholder="{{ entry_comment }}" id="input-comment" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control" style="height: 150px;" >{{ comment_body }}</textarea> <input type="hidden" name="case_id" value="{{ case_id }}"><input name="status" value="1" type="hidden">
+                        {% if error_comment %}
+                        <div class="text-danger">{{ error_comment }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label" for="input-image">{{ entry_image }}</label>
+                      <div class="col-sm-10">
+                        <input class="btn btn-sm" type="file" name="image" class="form-control"><hr>
+                        {% if error_image %}
+                        <div class="text-danger">{{ error_image }}</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </form>
+                <div class="pull-right">
+                    <button type="submit" form="form-comment" data-toggle="tooltip" title="{{ button_send }}" class="btn btn-primary"><i class="fa fa-send"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+              <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-comment-close" class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-comment">{{ entry_remark }}</label>
+                    <div class="col-sm-10">
+                      <textarea name="comment_body" placeholder="{{ entry_close_comment }}" id="input-comment" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control" style="height: 150px;" >{{ comment_body }}</textarea> <input type="hidden" name="case_id" value="{{ case_id }}"><input name="status" value="0" type="hidden">
+                    </div>
+                  </div>
+              </form>
+              <div class="pull-right">
+                  <button type="submit" form="form-comment-close" data-toggle="tooltip" class="btn btn-danger">Close Ticket</button>
+              </div>
+          </div>
+      </div>
+      {% else %}
+        <h3 class="text-center" style="color:#01253b"><b>{{ text_resolved }}</b></h3>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
